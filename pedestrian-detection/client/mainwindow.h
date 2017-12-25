@@ -8,12 +8,15 @@
 #include "config.h"
 #include "videosrc.h"
 #include <QMenu>
-class VideoThread{
+using namespace std ;
+class VideoThread:public QObject{
+Q_OBJECT
     typedef struct data{
         VideoSrc *p_src;
         QString url;
         bool quit;
         VideoWidget *video_render;
+        QByteArray rst;
     }data_t;
     data_t d;
 
@@ -24,8 +27,10 @@ private:
         Mat mt;
         bool flg;
         while(!p_data->quit){
+
             flg=p_data->p_src->fetch_frame(mt);
             if(flg){
+                p_data->video_render->set_rects(p_data->rst);
                 p_data->video_render->update_mat(mt);
             }
             this_thread::sleep_for(chrono::milliseconds(30));
@@ -43,7 +48,7 @@ public:
         d.p_src=NULL;
         d.url=url;
         d.video_render=widget;
-        p_thread=new thread(fun,&d);
+        p_thread=new std::thread(fun,&d);
 
     }
     ~VideoThread()
@@ -54,8 +59,28 @@ public:
         p_thread;
 
     }
+public slots:
+    void get_data(QByteArray rst)
+    {
+#if 1
+        d.rst.clear();
+        d.rst=rst;
+#else
+        QString str(rst.data());
+        QStringList list=str.split(":");
+        QStringList l;
+        foreach (QString s, list) {
+            l=s.split(',');
+            QRect r;
+            r.setRect(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
+
+           // prt(info,"#### %s",l[0].toStdString().data());
+        }
+#endif
+    }
+
 private:
-    thread *p_thread;
+    std::thread *p_thread;
     // VideoProcessor *p_pro;
 
 };

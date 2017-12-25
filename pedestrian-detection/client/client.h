@@ -86,6 +86,8 @@ public:
         udp_skt_alg_output->bind(Protocol::SERVER_DATA_OUTPUT_PORT,QUdpSocket::ShareAddress);
         connect(udp_skt_alg_output,SIGNAL(readyRead()),this,SLOT(get_rst()));
     }
+signals:
+    void send_rst(QByteArray);
 public slots:
     void get_rst()
     {
@@ -108,6 +110,7 @@ public slots:
 #else
 
             prt(info,"get data %s",datagram_rst.data());
+            emit send_rst(datagram_rst);
 #endif
 
             //   emit send_camera_rst(index,b_loc);
@@ -121,6 +124,7 @@ public slots:
 
 private:
     QUdpSocket *udp_skt_alg_output;
+    QByteArray rst;
 };
 
 class Client : public QObject

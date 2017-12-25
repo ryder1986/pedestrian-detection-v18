@@ -72,6 +72,7 @@ void MainWindow::on_treeWidget_devices_doubleClicked(const QModelIndex &index)
                 }
               //  else
                     p_video_thread=new VideoThread(url,window->openGLWidget);
+                    connect(rst_rcver,SIGNAL(send_rst(QByteArray)),p_video_thread,SLOT(get_data(QByteArray)));
 //                f->openGLWidget->render_set_mat(mat);
 //                f->openGLWidget->update();
                 // window->openGLWidget->start(p_item_device_current->text(0));//TODO:start playing

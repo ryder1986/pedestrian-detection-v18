@@ -15,6 +15,8 @@ class VideoWidget : public QOpenGLWidget
     int tick;
     int pos_x;
     int pos_y;
+    QStringList list;
+    QList <QRect> rcts;
 public:
     VideoWidget();
     VideoWidget(QWidget *w)
@@ -22,6 +24,25 @@ public:
         tick=0;
         pos_x=0;
         pos_y=0;
+        rcts.clear();
+        rcts.append(QRect(333,333,444,444));
+    }
+    void set_rects(QByteArray rst)
+    {
+        QString str(rst.data());
+        QStringList list=str.split(":");
+        QStringList l;
+        foreach (QString s, list) {
+            l=s.split(',');
+            QRect r;
+          //  r.setRect(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
+          //  rcts.append(r);
+            if(l.size()==4){
+            prt(info,"  %s, %s, %s, %s",l[0].toStdString().data(),l[1].toStdString().data(),\
+                    l[2].toStdString().data(),l[3].toStdString().data());
+         //   prt(info,"  %d, %d, %d, %d",l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
+                   }
+        }
     }
     int update_mat(Mat frame_mat)
     {
@@ -93,6 +114,10 @@ protected:
         QBrush red_brush_trans(QColor(0,0,200,100));
         painter.setBrush(red_brush_trans);
         painter.drawEllipse(pos_x++%500,pos_y++%500,50,50);
+        foreach (QRect r, rcts) {
+            painter.drawRect(r);
+        }
+
       //  painter.drawEllipse(500,500,50,50);
      //    painter.endNativePainting();
 
