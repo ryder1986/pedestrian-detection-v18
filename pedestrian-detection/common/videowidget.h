@@ -12,6 +12,8 @@ using namespace cv;
 class VideoWidget : public QOpenGLWidget
 {
     Mat frame;
+    int wi;
+    int he;
     int tick;
     int pos_x;
     int pos_y;
@@ -21,6 +23,8 @@ public:
     VideoWidget();
     VideoWidget(QWidget *w)
     {
+        wi=640;
+        he=480;
         tick=0;
         pos_x=0;
         pos_y=0;
@@ -29,27 +33,39 @@ public:
     }
     void set_rects(QByteArray rst)
     {
+      // this->width()/640;
+           //prt(info," pic width %d",this->width());
         QString str(rst.data());
         QStringList list=str.split(":");
         QStringList l;
+        int i=0;
         foreach (QString s, list) {
             l=s.split(',');
             QRect r;
-          //  r.setRect(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
-          //  rcts.append(r);
+            //  r.setRect(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
+            //  rcts.append(r);
+//            if(l.size()==4){
+//                prt(info," @@@@@@@@  time%d %s, %s, %s, %s",i++,l[0].toStdString().data(),l[1].toStdString().data(),\
+//                        l[2].toStdString().data(),l[3].toStdString().data());
+//                //   prt(info,"  %d, %d, %d, %d",l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
+//            }
+       //     prt(info," @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ %d",l[0].toInt());
+
             if(l.size()==4){
-            prt(info,"  %s, %s, %s, %s",l[0].toStdString().data(),l[1].toStdString().data(),\
-                    l[2].toStdString().data(),l[3].toStdString().data());
-         //   prt(info,"  %d, %d, %d, %d",l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
-                   }
+                r.setRect(l[0].toInt()*this->width()/wi*2,l[1].toInt()*this->height()/he*2,l[2].toInt()*this->width()/wi*2,l[3].toInt()*this->height()/he*2);
+                rcts.append(r);
+            }
         }
     }
     int update_mat(Mat frame_mat)
     {
         int size=frame_mat.total();
+
         if(size>0)
         {
             frame=frame_mat;
+                prt(info,"render set frame  %d %d",he=frame.rows,wi=frame.cols);
+
         }else{
             prt(info,"render set frame fail");
         }
@@ -97,7 +113,7 @@ protected:
         Mat bgr_frame=frame;
         Mat rgb_frame;
         // imwrite("test.jpg",rgb_frame);
-    //  cvtColor(rgb_frame,yuv_frame,CV_RGB2GRAY);
+        //  cvtColor(rgb_frame,yuv_frame,CV_RGB2GRAY);
         cvtColor(bgr_frame,rgb_frame,CV_BGR2RGB);
         QImage  img = QImage((const uchar*)(rgb_frame.data),
                              rgb_frame.cols,rgb_frame.rows,
@@ -109,17 +125,21 @@ protected:
 #endif
     }
     void paint_layout2(QPainter &painter){
-      //  painter.beginNativePainting();
-       // makeCurrent();
+        //  painter.beginNativePainting();
+        // makeCurrent();
         QBrush red_brush_trans(QColor(0,0,200,100));
         painter.setBrush(red_brush_trans);
         painter.drawEllipse(pos_x++%500,pos_y++%500,50,50);
-        foreach (QRect r, rcts) {
-            painter.drawRect(r);
-        }
+//        foreach (QRect r, rcts) {
+//            painter.drawRect(r);
+//        }
 
-      //  painter.drawEllipse(500,500,50,50);
-     //    painter.endNativePainting();
+            if(rcts.size()>0)
+            { painter.drawRect(rcts.first());
+                 rcts.clear();
+            }
+        //  painter.drawEllipse(500,500,50,50);
+        //    painter.endNativePainting();
 
     }
     void set_data(QByteArray ba)

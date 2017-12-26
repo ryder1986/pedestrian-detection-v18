@@ -18,7 +18,8 @@ class  VideoSrc{
     typedef struct thread_data{
         string url;
         CvCapture *p_cap;
-        int width;
+        VideoCapture vcap;
+         int width;
         int height;
         bool quit_flag;
         int frame_wait_time;
@@ -64,7 +65,12 @@ private:
         while(!data->quit_flag){
             if(data->p_cap){
                 IplImage *img;
-                img=cvQueryFrame(data->p_cap);
+            //      prt(info,"get frame begin");
+//                  bool rt=data->vcap.read(mat_rst);
+//                     if(rt) {prt(info,"get   ok");}
+//                     else {prt(info,"get   err");}
+                  img=cvQueryFrame(data->p_cap);
+                   //      prt(info,"get frame done");
                 if(!img){
                     prt(info,"get frame error,retry 1 seconds later");
                     cvReleaseCapture(&data->p_cap);
@@ -80,8 +86,10 @@ private:
                 }
             }else{
                 prt(info,"create video cap 1 sec later");
-                this_thread::sleep_for(chrono::seconds(1));
+                //this_thread::sleep_for(chrono::seconds(1));
                 data->p_cap=cvCreateFileCapture(data->url.data());  //create video source
+
+                //   data->vcap=   VideoCapture(data->url.data());
                 data->width=cvGetCaptureProperty(data->p_cap,CV_CAP_PROP_FRAME_WIDTH);
                 data->height=cvGetCaptureProperty(data->p_cap,CV_CAP_PROP_FRAME_HEIGHT);
             }

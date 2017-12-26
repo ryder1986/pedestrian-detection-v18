@@ -66,8 +66,12 @@ public:
             return 1;
 #endif
 
-      //      imshow("sss",frame);
+          // imshow("sss",frame);
           //  waitKey(2);
+
+            QString str;
+            str.clear();
+            rst.clear();
             if (!frame.empty())
             {
 //                frame_num++;
@@ -95,8 +99,7 @@ public:
 
 
                     vector<Rect>::iterator it = objs.begin();
-                    QString str;
-                    str.clear();
+  //    prt(info,"working" );
                     while (it != objs.end() && objs.size() != 0)
                     {
                         pedestrian_num++;
@@ -130,12 +133,14 @@ public:
 
 
                             QString x_str=QString::number(rct.x);
+                        //    prt(info,"%d",rct.x);
                             QString y_str=QString::number(rct.y);
                             QString width_str=QString::number(rct.width);
                             QString height_str=QString::number(rct.height);
                             //QString test_str=QString::number(test);
                             str.append(x_str).append(",").append(y_str).append(",").append(width_str).append(",").append(height_str).append(":");
                             rst.append(str.toStdString().data());
+                            prt(info,"%s",rst.data());
 
 //                            rst_ba.append(x_str.toStdString().data());
 //                            rst_ba.append(",");
@@ -144,6 +149,7 @@ public:
                             //               prt(info,"%d",rct.x);
                             ret=true;
                           //  break;//TODO, now we get first one
+
                         }
 
                         it++;
@@ -168,6 +174,8 @@ public:
                     imshow(video_path,frame);
                     waitKey(2);
 #endif
+             //  imshow("1111",frame);
+             //  waitKey(1);
                     objs.clear();
                 }
             }
@@ -184,6 +192,7 @@ public:
 
 #endif
         }
+      //    prt(info,"work done" );
         return ret;
     }
 
@@ -315,8 +324,7 @@ public:
 //            else
 //            {
 //                prt(info,"opencv handle frame error !");
-//            }
-//        }
+//            }//        }
 //#endif
 //        if(ret==true){
 //#if 0

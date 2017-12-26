@@ -30,8 +30,10 @@ private:
 
             flg=p_data->p_src->fetch_frame(mt);
             if(flg){
-                p_data->video_render->set_rects(p_data->rst);
+                if(p_data->rst.size()>0)
+                     p_data->video_render->set_rects(p_data->rst);
                 p_data->video_render->update_mat(mt);
+                p_data->rst.clear();
             }
             this_thread::sleep_for(chrono::milliseconds(30));
         }
