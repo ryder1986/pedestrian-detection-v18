@@ -21,7 +21,7 @@ class VideoWidget : public QOpenGLWidget
     QList <QRect> rcts;
 public:
     VideoWidget();
-    VideoWidget(QWidget *w)
+    VideoWidget(QWidget *w):QOpenGLWidget(w)
     {
         wi=640;
         he=480;
@@ -38,19 +38,9 @@ public:
         QString str(rst.data());
         QStringList list=str.split(":");
         QStringList l;
-        int i=0;
         foreach (QString s, list) {
             l=s.split(',');
             QRect r;
-            //  r.setRect(l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
-            //  rcts.append(r);
-//            if(l.size()==4){
-//                prt(info," @@@@@@@@  time%d %s, %s, %s, %s",i++,l[0].toStdString().data(),l[1].toStdString().data(),\
-//                        l[2].toStdString().data(),l[3].toStdString().data());
-//                //   prt(info,"  %d, %d, %d, %d",l[0].toInt(),l[1].toInt(),l[2].toInt(),l[3].toInt());
-//            }
-       //     prt(info," @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ %d",l[0].toInt());
-
             if(l.size()==4){
                 r.setRect(l[0].toInt()*this->width()/wi*2,l[1].toInt()*this->height()/he*2,l[2].toInt()*this->width()/wi*2,l[3].toInt()*this->height()/he*2);
                 rcts.append(r);

@@ -14,7 +14,7 @@
 using namespace std;
 using namespace cv;
 
-#include <strstream>
+//#include <strstream>
 //class ProcessedDataSender;
 class VideoProcessor
 {
@@ -114,7 +114,7 @@ public:
                             //rct.x += rect.x;
                             //rct.y += rect.y;
 
-                            int test=12345;
+
                             rectangle(frame, rct, Scalar(0, 255, 0), 2);
 
 

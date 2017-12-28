@@ -124,60 +124,60 @@ public:
         //        delete p_cfg;
 
     }
-    int handle_cmd(char *src_buf,char*dst_buf,int size)
-    {
-        prt(info,"handle cmd");
-        int client_cmd=Protocol::get_operation(src_buf);
-        int pkg_len=Protocol::get_length(src_buf);
-        int cam_index=Protocol::get_cam_index(src_buf);
-        QByteArray bta;
-        int ret_size=0;
-        switch (client_cmd) {
-        case Protocol::ADD_CAMERA:
-            prt(info,"protocol :add    cam  ");
-            bta.clear();
-            bta.append(src_buf+Protocol::HEAD_LENGTH,pkg_len);
-            add_camera(bta.data());
-            memcpy(dst_buf,src_buf,size);
-            ret_size= Protocol::HEAD_LENGTH;
-            break;
-        case  Protocol::GET_CONFIG:
-            prt(info,"protocol :get cofnig  ");
-            memcpy(dst_buf,src_buf,Protocol::HEAD_LENGTH);
-            memcpy(dst_buf+Protocol::HEAD_LENGTH,p_cfg->get_config().data(),p_cfg->get_config().size());
-            ret_size=p_cfg->get_config().size()+Protocol::HEAD_LENGTH;
-            break;
-        case Protocol::DEL_CAMERA:
-            prt(info,"protocol :deleting    cam %d ",cam_index);
-            del_camera(cam_index);
-            memcpy(dst_buf,src_buf,Protocol::HEAD_LENGTH);
-            ret_size= Protocol::HEAD_LENGTH;
-            break;
-        case Protocol::MOD_CAMERA:
-            prt(info,"protocol : modify   cam %d ",cam_index);
-            break;
-        case Protocol::CAM_OUTPUT_OPEN:
-            prt(info,"protocol : open   cam %d output",cam_index);
-            memcpy(dst_buf,src_buf,Protocol::HEAD_LENGTH);
-            ret_size= Protocol::HEAD_LENGTH;
-            {
-            int i=0;
-            foreach (Camera *p_c, cameras) {
-                if(i==cam_index)
-                  p_c->set_output(true,i);
-                else
-                  p_c->set_output(false,i);
-                i++;
-            }
+//    int handle_cmd(char *src_buf,char*dst_buf,int size)
+//    {
+//        prt(info,"handle client cmd");
+//        int client_cmd=Protocol::get_operation(src_buf);
+//        int pkg_len=Protocol::get_length(src_buf);
+//        int cam_index=Protocol::get_cam_index(src_buf);
 
-             }
-            break;
-        default:
-            break;
-        }
-        return ret_size;
+//        QByteArray bta;
+//        int ret_size=0;
+//        switch (client_cmd) {
+//        case Protocol::ADD_CAMERA:
+//            prt(info,"add camera");
+//            bta.clear();
+//            bta.append(src_buf+Protocol::HEAD_LENGTH,pkg_len);
+//            add_camera(bta.data());
+//            memcpy(dst_buf,src_buf,size);
+//            ret_size= Protocol::HEAD_LENGTH;
+//            break;
+//        case  Protocol::GET_CONFIG:
+//            prt(info,"get cfg");
+//            memcpy(dst_buf,src_buf,Protocol::HEAD_LENGTH);
+//            memcpy(dst_buf+Protocol::HEAD_LENGTH,p_cfg->get_config().data(),p_cfg->get_config().size());
+//            ret_size=p_cfg->get_config().size()+Protocol::HEAD_LENGTH;
+//            break;
+//        case Protocol::DEL_CAMERA:
+//            prt(info,"del cam %d ",cam_index);
+//            del_camera(cam_index);
+//            memcpy(dst_buf,src_buf,Protocol::HEAD_LENGTH);
+//            ret_size= Protocol::HEAD_LENGTH;
+//            break;
+//        case Protocol::MOD_CAMERA:
+//            prt(info,"modify cam %d ",cam_index);
+//            break;
+//        case Protocol::CAM_OUTPUT_OPEN:
+//            prt(info,"open cam %d output",cam_index);
+//            memcpy(dst_buf,src_buf,Protocol::HEAD_LENGTH);
+//            ret_size= Protocol::HEAD_LENGTH;
+//            {
+//                int i=0;
+//                foreach (Camera *p_c, cameras) {
+//                    if(i==cam_index)
+//                        p_c->set_output(true,i);
+//                    else
+//                        p_c->set_output(false,i);
+//                    i++;
+//                }
 
-    }
+//            }
+//            break;
+//        default:
+//            break;
+//        }
+//        return ret_size;
+//    }
 
     void start_all()
     {
@@ -193,8 +193,18 @@ public:
             cameras.removeOne(tmp);
         }
     }
+    void set_output(int index)
+    {
+        int i=0;
+        foreach (Camera *p_c, cameras) {
+            if(i==index)
+                p_c->set_output(true,i);
+            else
+                p_c->set_output(false,i);
+            i++;
+        }
 
-    void add_camera(const char *cfg_buf)
+    }    void add_camera(const char *cfg_buf)
     {
         p_cfg->set_config(cfg_buf);
         Camera *c=new Camera(p_cfg->cfg.camera[p_cfg->cfg.camera_amount-1]);
@@ -221,6 +231,7 @@ public:
     void mod_camera(const char *cfg_buf,const int index)
     {
         p_cfg->set_config(cfg_buf);
+         prt(info,"modify cam  %d",index);
         //        while(true){
         //            if(0==cameras[index-1]->try_restart(p_cfg->cfg.camera[p_cfg->cfg.camera_amount-1]))
         //                break;
@@ -230,9 +241,9 @@ public:
         //            }
         //        }
     }
-
-private:
     CameraConfiguration *p_cfg;
+private:
+
     QList<Camera *> cameras;
 
 };

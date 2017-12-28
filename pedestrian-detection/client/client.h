@@ -166,16 +166,12 @@ public:
     QByteArray  call_server(char *buf,int len)
     {
         QByteArray ret;
-        // int read_bytes;
-        int write_bytes;
-        ret.resize(0);
-        //   char  bf[1000];
+                ret.resize(0);
+        int write_bytes=0;
+
         write_bytes=tcp_socket->write(buf,len);
-        //   QThread::msleep(3000);
         if(tcp_socket->waitForReadyRead())
-            //      tcp_socket->read(bf,300);
             ret=tcp_socket->readAll();
-        //   read_bytes=tcp_socket->read(bf,300);
         return ret;
     }
 
