@@ -373,13 +373,6 @@ public slots:
         clients.removeOne(c);
     }
 
-    void output_2_client(QByteArray ba)
-    {
-        foreach (ClientSession  *c , clients) {
-            c->send_rst_to_client(ba);
-        }
-    }
-
 private:
     char recv_buf[Pd::BUFFER_MAX_LENGTH];
     char send_buf[Pd::BUFFER_MAX_LENGTH];

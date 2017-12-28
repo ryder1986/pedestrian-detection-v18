@@ -140,7 +140,7 @@ public:
                             //QString test_str=QString::number(test);
                             str.append(x_str).append(",").append(y_str).append(",").append(width_str).append(",").append(height_str).append(":");
                             rst.append(str.toStdString().data());
-                            prt(info,"%s",rst.data());
+                            prt(debug,"%s",rst.data());
 
 //                            rst_ba.append(x_str.toStdString().data());
 //                            rst_ba.append(",");

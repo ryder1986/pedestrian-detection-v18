@@ -64,7 +64,7 @@ public:
         if(size>0)
         {
             frame=frame_mat;
-                prt(info,"render set frame  %d %d",he=frame.rows,wi=frame.cols);
+                prt(debug,"render set frame  %d %d",he=frame.rows,wi=frame.cols);
 
         }else{
             prt(info,"render set frame fail");
